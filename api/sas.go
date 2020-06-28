@@ -6,8 +6,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/url"
+  "html/template"
 	"os"
-	"text/template"
 	"time"
 )
 
@@ -30,25 +30,26 @@ func GetToken(resourceURI string, sasKey string) string {
   rsct := ""
 
   stringToSign := signedPermissions + "\n" +
-                 signedStart + "\n" +
-                 signedExpiry + "\n" +
-                 canonicalizedResource + "\n" +
-                 signedIdentifier + "\n" +
-                 signedIP + "\n" +
-                 signedProtocol + "\n" +
-                 signedVersion + "\n" +
-                 signedResource + "\n" +
-                 signedSnapshotTime + "\n" +
-                 rscc + "\n" +
-                 rscd + "\n" +
-                 rsce + "\n" +
-                 rscl + "\n" +
-                 rsct
+                  signedStart + "\n" +
+                  signedExpiry + "\n" +
+                  canonicalizedResource + "\n" +
+                  signedIdentifier + "\n" +
+                  signedIP + "\n" +
+                  signedProtocol + "\n" +
+                  signedVersion + "\n" +
+                  signedResource + "\n" +
+                  signedSnapshotTime + "\n" +
+                  rscc + "\n" +
+                  rscd + "\n" +
+                  rsce + "\n" +
+                  rscl + "\n" +
+                  rsct
 
   fmt.Println("String to sign: " + stringToSign)
 
 	rawSig := getHmac256(stringToSign, sasKey)
 	sig := template.URLQueryEscaper(rawSig)
+  // sig := rawSig
 
 	return fmt.Sprintf("sv=%s&sp=%s&sr=%s&spr=%s&se=%s&sig=%s",
     signedVersion,
