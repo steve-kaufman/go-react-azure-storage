@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
   "github.com/joho/godotenv"
+  "github.com/steve-kaufman/go-azure-sas-generator"
 )
 
 func signature(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +18,18 @@ func signature(w http.ResponseWriter, r *http.Request) {
 
 	bloburi := string(keys[0])
 
-	token := GetToken(bloburi, os.Getenv("SAS_PASSWORD"))
+  sasKey := os.Getenv("SAS_PASSWORD")
+
+  options := generator.TokenOptions{
+    SignedPermissions: "w",
+    SignedExpiry: generator.GenerateSignedExpiry(10),
+    CanonicalizedResource: generator.GenerateCanonicalizedResource(bloburi),
+    SignedProtocol: "https",
+    SignedVersion: "2019-10-10",
+    SignedResource: "b",
+  }
+
+	token := generator.GenerateToken(&options, sasKey)
 
 	response := bloburi + "?" + token
 
