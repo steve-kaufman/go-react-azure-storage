@@ -23,7 +23,7 @@ func signature(w http.ResponseWriter, r *http.Request) {
   options := generator.TokenOptions{
     SignedPermissions: "w",
     SignedExpiry: generator.GenerateSignedExpiry(10),
-    CanonicalizedResource: generator.GenerateCanonicalizedResource(bloburi),
+    CanonicalizedResource: generator.GenerateCanonicalizedResource(bloburi, os.Getenv("SAS_SERVICE")),
     SignedProtocol: "https",
     SignedVersion: "2019-10-10",
     SignedResource: "b",
