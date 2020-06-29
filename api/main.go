@@ -5,8 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-  "github.com/joho/godotenv"
-  "github.com/steve-kaufman/go-azure-sas-generator"
+
+	"github.com/joho/godotenv"
+	generator "github.com/steve-kaufman/go-azure-sas-generator"
 )
 
 func signature(w http.ResponseWriter, r *http.Request) {
@@ -18,16 +19,16 @@ func signature(w http.ResponseWriter, r *http.Request) {
 
 	bloburi := string(keys[0])
 
-  sasKey := os.Getenv("SAS_PASSWORD")
+	sasKey := os.Getenv("SAS_PASSWORD")
 
-  options := generator.TokenOptions{
-    SignedPermissions: "w",
-    SignedExpiry: generator.GenerateSignedExpiry(10),
-    CanonicalizedResource: generator.GenerateCanonicalizedResource(bloburi, os.Getenv("SAS_SERVICE")),
-    SignedProtocol: "https",
-    SignedVersion: "2019-10-10",
-    SignedResource: "b",
-  }
+	options := generator.TokenOptions{
+		SignedPermissions:     "w",
+		SignedExpiry:          generator.GenerateSignedExpiry(10),
+		CanonicalizedResource: generator.GenerateCanonicalizedResource(bloburi, os.Getenv("SAS_SERVICE")),
+		SignedProtocol:        "https",
+		SignedVersion:         "2019-10-10",
+		SignedResource:        "b",
+	}
 
 	token := generator.GenerateToken(&options, sasKey)
 
@@ -35,17 +36,17 @@ func signature(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("SAS URI: " + response)
 
-  w.Header().Add("Access-Control-Allow-Origin", "*")
-  w.Header().Add("Access-Control-Allow-Headers", "*")
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "*")
 
 	fmt.Fprint(w, response)
 }
 
 func main() {
-  err := godotenv.Load()
-  if err != nil {
-    fmt.Println("Couldn't load .env")
-  }
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Couldn't load .env")
+	}
 	http.HandleFunc("/signature", signature)
 	fmt.Println("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
