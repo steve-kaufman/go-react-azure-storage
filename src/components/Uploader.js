@@ -17,12 +17,19 @@ export const Uploader = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
-    <div id='uploader' {...getRootProps()} className={isDragActive ? 'drag' : null}>
+    <div
+      id="uploader"
+      {...getRootProps()}
+      className={isDragActive ? "drag" : null}
+    >
       <input {...getInputProps()} />
       {isDragActive ? (
         <p>Drop here</p>
       ) : (
-        <p>Drag n' Drop here or click to <span className="dummy-link">select files</span></p>
+        <p>
+          Drag n' Drop here or click to{" "}
+          <span className="dummy-link">select files</span>
+        </p>
       )}
     </div>
   )

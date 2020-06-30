@@ -3,6 +3,7 @@
   border-radius: 10px
   margin-top: 1rem
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
   height: 300px
@@ -10,12 +11,33 @@
   &.drag
     background: #eee
 
-  p 
+  p
     color: #444
     font-size: 22px
 
     .dummy-link
-      color: #448
+      color: #0078d4
       cursor: pointer
       text-decoration: underline
 
+  ul
+    margin-top: 1rem
+    width: 80%
+
+    .selected-file
+      display: flex
+      align-items: center
+      justify-content: space-between
+
+      .cancel-btn
+        color: #888
+        padding-top: 0.5rem
+        transition: all 0.2s ease-out
+        z-index: 2
+
+        &:hover
+          color: #bd0000
+
+        svg
+          width: 1.2rem
+          height: 1.2rem

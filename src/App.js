@@ -1,9 +1,7 @@
 import React from "react"
-import { Header } from "./components/Header"
+import { Header, Page, Uploader, FileList, Form } from "./components"
+
 import { UploaderProvider } from "./context/UploaderContext"
-import { Uploader } from "./components/Uploader"
-import { Page } from "./components/Page"
-import { Form } from "./components/Form"
 
 function App() {
   return (
@@ -12,6 +10,7 @@ function App() {
       <UploaderProvider>
         <Page>
           <Uploader />
+          <FileList />
           <Form />
         </Page>
       </UploaderProvider>
