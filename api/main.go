@@ -43,11 +43,20 @@ func signature(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Load .env
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Couldn't load .env")
 	}
+
+	// Get location of react app to serve
+	reactDir := os.Getenv("REACT_DIR")
+
+	// Serve '/signature' route and statically serve react app on '/'
 	http.HandleFunc("/signature", signature)
+	http.Handle("/", http.FileServer(http.Dir(reactDir)))
+
+	// Start server
 	fmt.Println("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

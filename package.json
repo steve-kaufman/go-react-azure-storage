@@ -11,6 +11,7 @@
     "dotenv": "^8.2.0",
     "fine-uploader": "^5.16.2",
     "fine-uploader-wrappers": "^1.0.1",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
@@ -37,8 +38,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "node-sass": "^4.14.1"
   }
 }
