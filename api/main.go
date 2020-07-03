@@ -42,6 +42,18 @@ func signature(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, response)
 }
 
+func azureEndpoint(w http.ResponseWriter, r *http.Request) {
+	sasService := os.Getenv("SAS_SERVICE")
+	sasContainer := os.Getenv("SAS_CONTAINER")
+
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "*")
+
+	endpointStr := "https://" + sasService + ".blob.core.windows.net/" + sasContainer
+
+	fmt.Fprint(w, endpointStr)
+}
+
 func main() {
 	// Load .env
 	err := godotenv.Load()
@@ -54,6 +66,7 @@ func main() {
 
 	// Serve '/signature' route and statically serve react app on '/'
 	http.HandleFunc("/signature", signature)
+	http.HandleFunc("/azure-endpoint", azureEndpoint)
 	http.Handle("/", http.FileServer(http.Dir(reactDir)))
 
 	// Start server
