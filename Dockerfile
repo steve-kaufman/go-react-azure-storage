@@ -11,14 +11,16 @@ RUN yarn install --network-timeout 100000
 COPY src ./src
 COPY public ./public
 
+RUN yarn build
+
 # Go Server
-FROM golang:1.14 as goBuilder
+FROM golang:alpine as goBuilder
 
 WORKDIR /go/src/app
 
-COPY api/main.go .
+RUN apk update && apk add git
 
-ARG MSG=0
+COPY api/main.go .
 
 RUN go get -d -v ./...
 RUN go install -v ./...
@@ -26,17 +28,19 @@ RUN go install -v ./...
 RUN go build
 
 # Run server
-FROM node:12-slim
+FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=reactBuilder /app .
+COPY --from=reactBuilder /app/build ./public
 COPY --from=goBuilder /go/src/app/app ./server
 
-ENV REACT_DIR=/app/build
+ENV REACT_DIR=/app/public
 
 EXPOSE 8080
 
-COPY run.sh ./run.sh
+# COPY run.sh ./run.sh
 
-CMD sh ./run.sh
+RUN ["chmod", "+x", "./server"]
+
+CMD ["./server"]

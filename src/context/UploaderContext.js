@@ -1,18 +1,18 @@
-import React, { createContext } from "react"
+import React, { createContext, useEffect, useState } from "react"
 import FineUploaderAzure from "fine-uploader-wrappers/azure"
 
 export const UploaderContext = createContext()
 
+const api = process.env.REACT_APP_API || ''
+
 export const UploaderProvider = ({ children }) => {
-  const service = process.env.REACT_APP_SAS_SERVICE
-  const container = process.env.REACT_APP_SAS_CONTAINER
-  const uploader = new FineUploaderAzure({
+  const [uploader] = useState(new FineUploaderAzure({
     options: {
       request: {
-        endpoint: `https://${service}.blob.core.windows.net/${container}`,
+        endpoint: "",
       },
       signature: {
-        endpoint: `http://${window.location.hostname}:8080/signature`,
+        endpoint: `${api}/signature`,
       },
       retry: {
         enableAuto: true,
@@ -22,7 +22,15 @@ export const UploaderProvider = ({ children }) => {
       },
       autoUpload: false,
     },
-  })
+  }))
+
+  useEffect(() => {
+    fetch(`${api}/azure-endpoint`)
+      .then(res => res.text())
+      .then(azureEndpoint => {
+        uploader.methods.setEndpoint(azureEndpoint)
+      })
+  }, [uploader])
 
   return (
     <UploaderContext.Provider value={uploader}>
